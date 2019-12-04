@@ -2,7 +2,10 @@ package com.het.fir;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.view.View;
@@ -13,18 +16,15 @@ import androidx.annotation.RequiresApi;
 
 import com.het.fir.api.FirApi;
 import com.het.fir.bean.FirAppBean;
-import com.het.fir.util.SystemInfoUtils;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 
 public class FirSDK {
-
     public static final String TAG = "fir";
     static AlertDialog myDialog = null;
     static Activity mActivity;
-    //声明进度条对话框
-
     public static void setAppId(String appId) {
         FirApi.getApi().setAppid(appId);
 
@@ -67,22 +67,50 @@ public class FirSDK {
         }).start();
 
     }
+    private static int getAppVersionCode(final Context context) {
+        int iAppVersionCode = 0;
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(context.getPackageName(),
+                    0);
+            iAppVersionCode = info.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+        return iAppVersionCode;
+    }
 
+    private static String getAppVersionName(final Context context) {
+        String strAppVersionName = "0.0.1";
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(context.getPackageName(),
+                    0);
+            strAppVersionName = info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+        return strAppVersionName;
+    }
+
+    private static boolean isNum(String str) {
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(str).matches();
+
+    }
 
     private static void showDialog(final Activity activity, final FirAppBean appBean) {
-        int currentVersoin = SystemInfoUtils.getAppVersionCode(activity);
+        int currentVersoin = getAppVersionCode(activity);
         int remoteVersion = 0;
-        if (SystemInfoUtils.isNum(appBean.getVersion())) {
+        if (isNum(appBean.getVersion())) {
             remoteVersion = Integer.valueOf(appBean.getVersion());
         }
         if (remoteVersion <= currentVersoin) {
-            Toast.makeText(activity, activity.getString(R.string.current_version) + SystemInfoUtils.getAppVersionName(activity),
+            Toast.makeText(activity, activity.getString(R.string.current_version) + getAppVersionName(activity),
                     Toast.LENGTH_SHORT).show();
             return;
         }
         StringBuffer sb = new StringBuffer();
         sb.append(activity.getString(R.string.current_version));
-        sb.append(SystemInfoUtils.getAppVersionName(activity));
+        sb.append(getAppVersionName(activity));
         sb.append(activity.getString(R.string.last_version));
         sb.append(appBean.getVersionShort());
         sb.append(activity.getString(R.string.update_content));
@@ -97,12 +125,11 @@ public class FirSDK {
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //调用以下方法，DownloadFileListener 才有效；如果完全使用自己的下载方法，不需要设置DownloadFileListener
                             myDialog.dismiss();
                             Intent intent = new Intent();
-                            intent.setData(Uri.parse(appBean.getInstallUrl()));//Url 就是你要打开的网址
+                            intent.setData(Uri.parse(appBean.getInstallUrl()));
                             intent.setAction(Intent.ACTION_VIEW);
-                            activity.startActivity(intent); //启动浏览器
+                            activity.startActivity(intent);
 
                         }
                     });

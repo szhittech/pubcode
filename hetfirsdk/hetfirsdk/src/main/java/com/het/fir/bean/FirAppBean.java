@@ -4,20 +4,6 @@ import java.io.Serializable;
 
 public class FirAppBean implements Serializable {
 
-    /**
-     * name : clifeapp
-     * version : 1
-     * changelog : null
-     * updated_at : 1575365113
-     * versionShort : v1.0.1.2
-     * build : 1
-     * installUrl : http://download.fir.im/apps/5ddccaebf945482374c3d5ce/install?download_token=b5c7bede7c1a226a8f90f14492bb2ee1&source=update
-     * install_url : http://download.fir.im/apps/5ddccaebf945482374c3d5ce/install?download_token=b5c7bede7c1a226a8f90f14492bb2ee1&source=update
-     * direct_install_url : http://download.fir.im/apps/5ddccaebf945482374c3d5ce/install?download_token=b5c7bede7c1a226a8f90f14492bb2ee1&source=update
-     * update_url : http://fir.im/clifeapp
-     * binary : {"fsize":31188735}
-     */
-
     private String name;
     private String version;
     private Object changelog;
