@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 
 import com.het.fir.api.FirApi;
 import com.het.fir.bean.FirAppBean;
@@ -34,7 +33,6 @@ public class FirSDK {
         FirApi.getApi().setApiToken(token);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void update(final Activity activity) {
         if (myDialog == null) {
             mActivity = activity;
