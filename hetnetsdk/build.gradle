@@ -1,0 +1,66 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    //buildToolsVersion "27.0.1"
+
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation 'androidx.appcompat:appcompat:1.1.0'
+//    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+//    implementation("com.squareup.okhttp3:okhttp:4.2.1")
+    implementation("com.squareup.okhttp3:okhttp:3.11.0")
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+//    implementation 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+//    implementation "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+}
+
+
+
+
+
+ext {
+    c_repo = "maven"
+    c_packaging = "aar"
+    c_groupid = 'com.github.szhittech'                                   //  填写groupId， 一般是包名，比如：com.android.support
+    c_libname = 'hetfirsdk'                                             //  如果不填写，就使用module名称
+    c_libversion = '0.0.6'                                               //  版本号，比如：22.2.1
+    c_siteUrl = 'https://github.com/szhittech/pubcode/tree/master/hetfirsdk'
+    c_gitUrl = 'https://github.com/szhittech/pubcode.git'
+    c_issueUrl = 'https://github.com/szhittech/pubcode/issues'
+    c_vcsUrl = 'https://github.com/szhittech/pubcode.git'              //  可以填写github上库的地址.
+    c_desc = 'android update app'              //  可以填写github上库的地址.
+    c_licenseName = 'Apache-2.0'                                          //  支持的协议请看
+    c_email = "xiaoli.xia@clife.cn"
+    c_dname = "xiaoli.xia"
+    c_did = "uuxia"
+    c_bintrayuser = "clife"
+    c_bintrayapikey = "afb255973f89db54ab4611d3bd958b56f94ab743"
+}
+
+apply from: 'bintray.gradle'
