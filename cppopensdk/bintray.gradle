@@ -1,0 +1,78 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+
+
+group = project.c_groupid
+version = project.c_libversion
+
+
+bintray {
+    user = project.c_bintrayuser
+    key = project.c_bintrayapikey
+
+    configurations = ['archives'] //When uploading configuration files
+    pkg {
+        repo = project.c_repo
+        name = project.c_libname
+        desc = project.c_desc
+        websiteUrl = project.c_siteUrl
+        issueTrackerUrl = project.c_issueUrl
+        vcsUrl = project.c_gitUrl
+        licenses = [project.c_licenseName]
+        labels = ['aar', 'android', 'fir', 'sdk','clife']
+        publicDownloadNumbers = true
+        publish = true
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging project.c_packaging
+                name project.c_desc
+                url project.c_siteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id project.c_did
+                        name project.c_dname
+                        email project.c_email
+                    }
+                }
+                scm {
+                    connection project.c_gitUrl
+                    developerConnection project.c_gitUrl
+                    url project.c_siteUrl
+
+                }
+            }
+        }
+    }
+}
+
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+//
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+//
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+artifacts {
+    //archives javadocJar
+    archives sourcesJar
+}

@@ -1,0 +1,84 @@
+﻿{
+  "libs": [
+    {
+      "name": "hetxxxsdk",
+      "group": "com.github.szhittech",
+      "docLink": "http://www.baidu.com",
+      "release": [],
+      "snapshot": [
+        {
+          "description": "\t1.请求拦截\r\n\t2.新增数据库兼容",
+          "forceUpdate": 0,
+          "version": "3.0.1-SNAPSHOT"
+        },
+        {
+          "description": "\t1.请求拦截\r\n\t2.新增数据库兼容",
+          "forceUpdate": 0,
+          "version": "1.0.2-SNAPSHOT"
+        },
+        {
+          "description": "\t1.请求拦截\r\n\t2.新增数据库兼容",
+          "forceUpdate": 0,
+          "version": "1.0.4-SNAPSHOT"
+        }
+      ]
+    },
+    {
+      "name": "hetabcsdk",
+      "group": "com.github.szhittech",
+      "docLink": "http://www.baidu.com",
+      "release": [
+        {
+          "description": "\t1.请求拦截\r\n\t2.新增数据库兼容",
+          "forceUpdate": 0,
+          "version": "0.1.6"
+        }
+      ],
+      "snapshot": [
+        {
+          "description": "\t1.请求拦截\r\n\t2.新增数据库兼容",
+          "forceUpdate": 0,
+          "version": "0.0.0-SNAPSHOT"
+        }
+      ]
+    },
+    {
+      "name": "hetlibrarysdk",
+      "group": "com.github.szhittech",
+      "docLink": "http://200.200.200.40/svn/repositories/android/code/trunk/clifepublic/readme.html",
+      "release": [
+        {
+          "description": "请输入版本更新内容",
+          "forceUpdate": "0",
+          "version": "0.0.0"
+        }
+      ],
+      "snapshot": [
+        {
+          "description": "请输入版本更新内容",
+          "forceUpdate": "0",
+          "version": "0.0.0-SNAPSHOT"
+        }
+      ]
+    },
+    {
+      "name": "hetxmlprotocolsdk",
+      "group": "com.github.szhittech",
+      "docLink": "http://200.200.200.40/svn/repositories/android/code/trunk/clifepublic/readme.html",
+      "release": [
+        {
+          "description": "请输入版本升级内容",
+          "forceUpdate": 0,
+          "version": "1.0.4"
+        }
+      ],
+      "snapshot": [
+        {
+          "description": "未填写更新内容",
+          "forceUpdate": "0",
+          "version": "0.0.0-SNAPSHOT"
+        }
+      ]
+    }
+  ]
+}

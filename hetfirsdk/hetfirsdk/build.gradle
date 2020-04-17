@@ -36,6 +36,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:3.11.0")
     implementation 'com.google.code.gson:gson:2.8.5'
 
+    //implementation 'com.github.szhittech:hetxmlprotocolsdk:1.0.5'
+
 //    implementation 'com.github.dcendents:android-maven-gradle-plugin:2.1'
 //    implementation "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
 }
@@ -45,11 +47,11 @@ dependencies {
 
 
 ext {
-    c_repo = "maven"
+    c_repo = "clife"
     c_packaging = "aar"
     c_groupid = 'com.github.szhittech'                                   //  填写groupId， 一般是包名，比如：com.android.support
     c_libname = 'hetfirsdk'                                             //  如果不填写，就使用module名称
-    c_libversion = '0.0.6'                                               //  版本号，比如：22.2.1
+    c_libversion = '0.1.0'                                               //  版本号，比如：22.2.1
     c_siteUrl = 'https://github.com/szhittech/pubcode/tree/master/hetfirsdk'
     c_gitUrl = 'https://github.com/szhittech/pubcode.git'
     c_issueUrl = 'https://github.com/szhittech/pubcode/issues'

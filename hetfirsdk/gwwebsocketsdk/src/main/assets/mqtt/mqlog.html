@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <!-- <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script> -->
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/FileSaver.js"></script>
+    <script src="../js/mqttws31.js" type="text/javascript"></script>
+    <script src="../js/mqtt.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <style type="text/css">
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+
+    .scrollTbody {
+        display: block;
+        height: 900px;
+        overflow: auto;
+        width: 100%;
+    }
+
+    .table td {
+        word-break: break-all;
+    }
+
+    .table tr {
+        border-right: 1px solid #CCC;
+        border-top: 1px solid #DDD;
+        border-left: 1px solid #EB8;
+        border-bottom: 1px solid #B74;
+    }
+    </style>
+    <style type="text/css">
+    .comments {
+        width: 100%;
+        /*自动适应父布局宽度*/
+        height: 900px;
+        overflow: auto;
+        word-break: break-all;
+        /*在ie中解决断行问题(防止自动变为在一行显示，主要解决ie兼容问题，ie8中当设宽度为100%时，文本域类容超过一行时，
+当我们双击文本内容就会自动变为一行显示，所以只能用ie的专有断行属性“word-break或word-wrap”控制其断行)*/
+    }
+    </style>
+</head>
+
+<body onbeforeunload="checkLeave()">
+    <!-- <input type="text" id="msg"  <td style="word-break: break-all;">{{client.text}}</td>/>
+    <input type="button" value="Send" onclick="send()" /> -->
+    <input type="button" class="btn btn-primary" value="开启日志" onclick="start()" />
+    <input type="button" class="btn btn-primary" value="关闭日志" onclick="stop()" />
+    <input id="post" class="btn btn-primary" type="button" value="保存日志" onclick="saveLog(getText())" />
+    <input id="post" class="btn btn-primary" type="button" value="百度" onclick="baidu()" />
+    <input id="post" class="btn btn-primary" type="button" value="refreshData" onclick="showLog('fasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwefasefasfwe\r\n')" />
+    <input id="name" type="text" />
+    <!--  <textarea id="txtContent" readonly="readonly" class="comments"></textarea> -->
+    <div>
+        <div id="app">
+            <table class="table">
+                <tbody id="container" class="scrollTbody">
+                    <tr v-for="(index, client) in clients ">
+                        <td>{{client}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+var vue = new Vue({
+    el: '#app',
+    data: {
+        checkedNames: [],
+        clients: []
+    },
+    methods: {
+        refreshData: 　 function(str) {
+            //alert('uuxia');
+            vue.clients.push(str);
+        },
+        onItemClick: function(client) {
+            console.log("####onItemClick " + client);
+            window.location.href = "mqlog.html?" + parseParam(client);
+        }
+    }
+})
+</script>
+<script>
+$(document).ready(function() {
+    var client = GetRequest();
+    if (typeof(client.clientId) == "undefined") {
+        topic = null;
+    } else {
+        topic = "log/" + client.clientId;
+        document.title = client.clientId;
+        document.getElementById("name").value = client.clientId;
+    }
+});
+
+function getText() {
+    //displayContent('jasbfjwehfjknasehfuhnejfhnjwehnjf');
+    var arrays = vue.clients;
+    //return document.getElementById("txtContent").value
+    var string = arrays.join("\r\n"); //arrays.toString();
+    return string;
+}
+
+function goodbye() {
+    //displayContent('jasbfjwehfjknasehfuhnejfhnjwehnjf');
+}
+
+
+function showLog(str) {
+    //displayContent('jasbfjwehfjknasehfuhnejfhnjwehnjf');
+    //vue.$options.methods.refreshData({ textid: '0', text: str })
+    vue.$options.methods.refreshData(str)
+    var content = document.getElementById('container');
+    content.scrollTop = content.scrollHeight;
+}
+
+//根据参数名称获取url参数
+function getUrlParamValue(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return decodeURIComponent(r[2]);
+    return null;
+}
+
+//获取url参数封装成对象
+function GetRequest() {
+
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        for (var i = 0; i < strs.length; i++) {
+            theRequest[strs[i].split("=")[0]] = decodeURIComponent((strs[i].split("=")[1]));
+        }
+    }
+    return theRequest;
+}
+</script>
+<script>
+function checkLeave() {　　　　
+    event.returnValue = "确定离开当前页面吗？";　　　
+    console.log("白白白白:");
+    stop();
+    //alert("感谢您访问!");
+}
+
+function baidu() {　　　　 window.location.href = "www.baidu.com"　　　 }
+</script>
+
+</html>

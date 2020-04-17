@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.het.websocket"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.SHUTDOWN" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application>
+
+        <!--
+        <service
+            android:name="com.gateway.core.service.GateWayService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.GateWayService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        -->
+        <service
+            android:name="com.het.websocket.log.LogcatService"
+            android:exported="false" />
+        <service
+            android:name="com.het.websocket.log.SmartLogService"
+            android:exported="false" />
+
+        <!--
+        <service
+            android:name="com.het.websocket.log.LogcatService"
+            android:enabled="true"
+            android:exported="true"
+            android:persistent="true"
+            android:process=":logservice">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.LogcatService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        -->
+        <meta-data
+            android:name="WS_RELEASE_TIME"
+            android:value="2018-07-04 17:32:05" />
+    </application>
+
+</manifest>

@@ -29,6 +29,10 @@ public class FirSDK {
 
     }
 
+    public static void setHost(String host) {
+        FirApi.getApi().setHost(host);
+    }
+
     public static void setApiToken(String token) {
         FirApi.getApi().setApiToken(token);
     }

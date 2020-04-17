@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>查看MQTT订阅</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script> -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <style type="text/css">
+    .container {
+        width: 100%;
+        /*自动适应父布局宽度*/
+        overflow: auto;
+        word-break: break-all;
+        /*在ie中解决断行问题(防止自动变为在一行显示，主要解决ie兼容问题，ie8中当设宽度为100%时，文本域类容超过一行时，
+当我们双击文本内容就会自动变为一行显示，所以只能用ie的专有断行属性“word-break或word-wrap”控制其断行)*/
+    }
+    </style>
+</head>
+</head>
+
+<body>
+    <div class="container">
+        <!-- start list -->
+        <div class="col-md-6 col-md-offset-3">
+            <h1>Vue demo</h1>
+            <div id="app">
+                <table class="table">
+                    <tr>
+                        <!-- <td>
+                            <input type="checkbox">
+                        </td> -->
+                        <td>clientid</td>
+                        <td>topic</td>
+                        <td>qos</td>
+                    </tr>
+                    <tr v-for="client in clients ">
+                        <!--  <td>
+                            <label>
+                                <input type="checkbox" v-bind:value="client.clientid" v-model="checkedNames">
+                            </label>
+                        </td> -->
+                        <td>{{client.clientid}}</td>
+                        <td>{{client.topic}}</td>
+                        <td>{{client.qos}}</td>
+                        <td>
+                            <input type="button" value="查看" @click="onItemClick(client)">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">add</button>
+                            <button type="button" class="btn btn-primary" v-on:click="delItems">delete</button>
+                            <button type="button" class="btn btn-primary" v-on:click="initData">refresh</button>
+                        </td>
+                    </tr>
+                </table>
+                <!-- <p>Checked names: {{ checkedNames }}</p> -->
+                <!-- start modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                            </div>
+                            <div class="modal-body">
+                                <input class="form-control" placeholder="input id" v-model="client.clientid">
+                                <input class="form-control" placeholder="input author" v-model="client.topic">
+                                <input class="form-control" placeholder="input name" v-model="client.qos">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="addItem">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal -->
+            </div>
+        </div>
+        <!-- end list -->
+    </div>
+</body>
+<script>
+// 将js对象转成url jquery实现
+var parseParam = function(paramObj, key) {
+    var paramStr = "";
+    if (paramObj instanceof String || paramObj instanceof Number || paramObj instanceof Boolean) {
+        paramStr += "&" + key + "=" + encodeURIComponent(paramObj);
+    } else {
+        $.each(paramObj, function(i) {
+            var k = key == null ? i : key + (paramObj instanceof Array ? "[" + i + "]" : "." + i);
+            paramStr += '&' + parseParam(this, k);
+        });
+    }
+    return paramStr.substr(1);
+};
+
+
+/**
+ * paramObj 将要转为URL参数字符串的对象
+ * key URL参数字符串的前缀
+ * encode true/false 是否进行URL编码,默认为true
+ * js实现
+ * return URL参数字符串
+ */
+var urlEncode = function(paramObj, key, encode) {
+    if (paramObj == null) return '';
+    var paramStr = '';
+    var t = typeof(paramObj);
+    if (t == 'string' || t == 'number' || t == 'boolean') {
+        paramStr += '&' + key + '=' + ((encode == null || encode) ? encodeURIComponent(paramObj) : paramObj);
+    } else {
+        for (var i in paramObj) {
+            var k = key == null ? i : key + (paramObj instanceof Array ? '[' + i + ']' : '.' + i);
+            paramStr += urlEncode(paramObj[i], k, encode);
+        }
+    }
+    return paramStr;
+};
+</script>
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        client: {
+            clientid: '0',
+            topic: '',
+            qos: ''
+        },
+        checkedNames: [],
+        clients: []
+    },
+    methods: {
+        //删除方法
+        delItems: function() {
+            for (var i = 0; i < this.checkedNames.length; i++) {
+                for (var j = 0; j < this.clients.length; j++) {
+                    var cur_book = this.clients[j];
+                    if (cur_book.clientid == this.checkedNames[i]) {
+                        this.clients.splice(j, 1);
+                    }
+                }
+            }
+            this.checkedNames = [];
+        },
+        //添加方法
+        addItem: 　 function() {
+            this.clients.push(this.client);
+        },
+        initData: 　 function() {
+            console.log("####getConfig ");
+            var that = this;
+            jQuery.ajax({
+                type: "get",
+                url: "http://uuxia.cn:18083/api/subscriptions",
+                apiPath: "/",
+                async: false,
+                //contentType: "application/x-www-form-urlencoded",
+                dataType: 'json',
+                success: function(results, status) {
+                    var data = JSON.stringify(results);
+                    console.log("####results " + data + " " + status);
+                    that.clients = results.result;
+                    // return false;
+                },
+                error: function(e) {
+                    console.log("####getSubs " + e);
+                    //getId("btnConnect").disabled = false;
+                    // return false;
+                }
+            });
+        },
+        //初始化
+        init: function() {
+            this.initData();
+        },
+        onItemClick: function(client) {
+            console.log("####onItemClick " + client);
+            window.location.href = "mqlog.html?" + parseParam(client);
+        }
+    }
+})
+</script>
+
+</html>

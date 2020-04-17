@@ -2,7 +2,6 @@ package com.het.fir.api;
 
 import android.util.Log;
 
-
 import com.google.gson.Gson;
 import com.het.fir.FirSDK;
 import com.het.fir.bean.FirAppBean;
@@ -17,6 +16,11 @@ public class FirApi {
     private static FirApi api = null;
     private String appid = null;
     private String apiToken = null;
+    private String host = "http://api.fir.im";
+
+    public void setHost(String host) {
+        this.host = host;
+    }
 
     public void setAppid(String appid) {
         this.appid = appid;
@@ -27,9 +31,9 @@ public class FirApi {
     }
 
     public static FirApi getApi() {
-        if (api==null){
-            synchronized (FirApi.class){
-                if (api==null){
+        if (api == null) {
+            synchronized (FirApi.class) {
+                if (api == null) {
                     api = new FirApi();
                 }
             }
@@ -39,14 +43,14 @@ public class FirApi {
 
     public FirAppBean getAppInfo() throws IOException {
         //http://api.fir.im/apps/latest/5ddccaebf945482374c3d5ce?api_token=f3ecab6024a139a17630ec5d85ce8f35
-        String host = "http://api.fir.im/apps/latest/";
-        host += appid;
-        host += "?api_token=";
-        host += apiToken;
-        Log.e(FirSDK.TAG,host);
-        String respose = run(host);
+        String url = host + "/apps/latest/";
+        url += appid;
+        url += "?api_token=";
+        url += apiToken;
+        Log.e(FirSDK.TAG, url);
+        String respose = run(url);
         if (respose != null) {
-            Log.i(FirSDK.TAG,respose);
+            Log.i(FirSDK.TAG, respose);
             FirAppBean appBean = new Gson().fromJson(respose, FirAppBean.class);
             return appBean;
         }
@@ -54,14 +58,23 @@ public class FirApi {
     }
 
     OkHttpClient client = new OkHttpClient();
+
     String run(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+        Response response = client.newCall(request).execute();
+        if (response != null) {
+            int code = response.code();
+            if (code == 200) {
+                return response.body().string();
+            }
         }
+        return null;
+
+//        try (Response response = client.newCall(request).execute()) {
+//            return response.body().string();
+//        }
     }
 
 
